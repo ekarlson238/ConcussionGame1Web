@@ -17,6 +17,10 @@ public class Gameplay : MonoBehaviour
     private RectTransform canvasTransform;
 
     [SerializeField]
+    private GameObject soccerBallSpawnSpace; //testing new parent
+    private RectTransform soccerBallSpawnSpaceTransform;
+
+    [SerializeField]
     private GameObject level2Balls;
 
     [SerializeField]
@@ -65,12 +69,16 @@ public class Gameplay : MonoBehaviour
         canvasTransform = canvas.GetComponent<RectTransform>();
         myPrefabTransform = myPrefab.GetComponent<RectTransform>();
 
+        soccerBallSpawnSpaceTransform = soccerBallSpawnSpace.GetComponent<RectTransform>(); //testing
+
         score = 0;
 
         NewPosition();
 
-        // Instantiate prefab at position and zero rotation.
-        GameObject prefabInstance = GameObject.Instantiate(myPrefab, position, Quaternion.identity, GameObject.FindGameObjectWithTag("Canvas").transform);
+        NewSpawn();
+
+
+        //GameObject prefabInstance = GameObject.Instantiate(myPrefab, position, Quaternion.identity, canvas.transform);
     }
 
     // Update is called once per frame
@@ -98,17 +106,40 @@ public class Gameplay : MonoBehaviour
     //generates a new position within the canvas
     public void NewPosition()
     {
-        position = new Vector3(Random.Range((-1 *((canvasTransform.rect.width - myPrefabTransform.rect.width)/2)) + canvas.transform.position.x, 
+        position = new Vector3(Random.Range((-1 *((soccerBallSpawnSpaceTransform.rect.width - myPrefabTransform.rect.width)/2)), 
+            ((soccerBallSpawnSpaceTransform.rect.width - myPrefabTransform.rect.width) / 2)), 
+            Random.Range((-1 * ((soccerBallSpawnSpaceTransform.rect.height - myPrefabTransform.rect.height) / 2)),
+            ((soccerBallSpawnSpaceTransform.rect.height - myPrefabTransform.rect.height) / 2)), 
+            0);
+
+        /*
+         position = new Vector3(Random.Range((-1 *((soccerBallSpawnSpaceTransform.rect.width - myPrefabTransform.rect.width)/2)) + soccerBallSpawnSpace.transform.position.x, 
+            ((soccerBallSpawnSpaceTransform.rect.width - myPrefabTransform.rect.width) / 2) + soccerBallSpawnSpace.transform.position.x), 
+            Random.Range((-1 * ((soccerBallSpawnSpaceTransform.rect.height - myPrefabTransform.rect.height) / 2)) + soccerBallSpawnSpace.transform.position.y,
+            ((soccerBallSpawnSpaceTransform.rect.height - myPrefabTransform.rect.height) / 2) + soccerBallSpawnSpace.transform.position.y), 
+            0);
+         */
+
+        /*
+         position = new Vector3(Random.Range((-1 *((canvasTransform.rect.width - myPrefabTransform.rect.width)/2)) + canvas.transform.position.x, 
             ((canvasTransform.rect.width - myPrefabTransform.rect.width) / 2) + canvas.transform.position.x), 
             Random.Range((-1 * ((canvasTransform.rect.height - myPrefabTransform.rect.height) / 2)) + canvas.transform.position.y,
             ((canvasTransform.rect.height - myPrefabTransform.rect.height) / 2) + canvas.transform.position.y - topCanvasBarTransform.rect.height), 
             0);
+         */
+
     }
 
     public void NewSpawn()
     {
         Debug.Log("New Prefab Spawn");
-        GameObject prefabInstance = GameObject.Instantiate(myPrefab, position, Quaternion.identity, canvas.transform);
+
+        GameObject prefabInstance = GameObject.Instantiate(myPrefab, soccerBallSpawnSpace.transform, false);
+        prefabInstance.transform.localPosition = position;
+
+        //GameObject prefabInstance = GameObject.Instantiate(myPrefab, position, Quaternion.identity, soccerBallSpawnSpace.transform);
+
+        //GameObject prefabInstance = GameObject.Instantiate(myPrefab, position, Quaternion.identity, canvas.transform);
     }
 
     public void ReturntoStartScene()
